@@ -89,12 +89,17 @@ class nginx_reverse_proxy_plugin {
 	 */
 	function ssl($event_name, $data) {
 		global $app, $conf;
-
+		$app->log('ssl() was called with event_name:' . $event_name, LOGLEVEL_DEBUG);
+		$app->log('ssl() was called with following data:' . $event_name, LOGLEVEL_DEBUG);
+		foreach ($data as $key => $value) {
+			$app->log("$key => $value", LOGLEVEL_DEBUG);
+		}
 		$app->uses('system');
 
 		//* Only vhosts can have a ssl cert
 		if($data["new"]["type"] != "vhost" && $data["new"]["type"] != "vhostsubdomain") {
 			return;
+			$app->log('Datatype not vhost or vhostsubdomain, returning.', LOGLEVEL_DEBUG);
 		}
 
 		if ($data['new']['ssl_action'] == 'del') {
